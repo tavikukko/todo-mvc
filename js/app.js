@@ -27,6 +27,31 @@
 				var store = localStorage.getItem(namespace);
 				return (store && JSON.parse(store)) || [];
 			}
+		},
+		createCookie: function (name, value, days) {
+		    var expires;
+
+		    if (days) {
+		        var date = new Date();
+		        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		        expires = "; expires=" + date.toGMTString();
+		    } else {
+		        expires = "";
+		    }
+		    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+		},
+		readCookie: function (name) {
+		    var nameEQ = escape(name) + "=";
+		    var ca = document.cookie.split(';');
+		    for (var i = 0; i < ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+		        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+		    }
+		    return null;
+		},
+		eraseCookie: function (name) {
+		    this.createCookie(name, "", -1);
 		}
 	};
 
@@ -64,6 +89,9 @@
 					break;
 					case 'register':
 						alert(obj.secret);
+					break;
+					case 'login':
+						alert(obj.status + ' ' + obj.message);
 					break;
 					case 'update':
 					$.each(App.todos, function (i, val) {
@@ -126,6 +154,8 @@
 			this.$newuser = this.$info.find('#newuser');
 			this.$newpassword = this.$info.find('#newpassword');
 			this.$newpassword2 = this.$info.find('#newpassword2');
+			this.$loginuser = this.$info.find('#loginuser');
+			this.$loginpassword = this.$info.find('#loginpassword');
 			this.$newTodo = this.$header.find('#new-todo');
 			this.$toggleAll = this.$main.find('#toggle-all');
 			this.$todoList = this.$main.find('#todo-list');
@@ -141,6 +171,7 @@
 			this.$footer.on('click', '#filter-active', this.filterActive);
 			this.$footer.on('click', '#filter-all', this.filterAll);
 			this.$info.on('click', '#register', this.register);
+			this.$info.on('click', '#login', this.login);
 			list.on('change', '.toggle', this.toggle);
 			list.on('dblclick', 'label', this.edit);
 			list.on('keypress', '.edit', this.blurOnEnter);
@@ -255,6 +286,20 @@
 			register.password2 = App.$info.find('#password2').val();
 			//send to server
 			App.ws.send(JSON.stringify(register));
+        },
+	    login: function () {
+	    	alert("pressed");
+	    	alert(App.$info.find('#loginuser').val());
+	    	alert(App.$info.find('#loginpassword').val());
+	    	//alert(App.$info.find('#password2').val());
+
+			//create message to send
+			var login = new Object();
+			login.action = "login";
+			login.username = App.$info.find('#loginuser').val();
+			login.password = App.$info.find('#loginpassword').val();
+			//send to server
+			App.ws.send(JSON.stringify(login));
         },
         create: function (e) {
         	var $input = $(this);
