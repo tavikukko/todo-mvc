@@ -88,10 +88,31 @@
 					});
 					break;
 					case 'register':
-						alert(obj.secret);
+						alert(obj.message);
 					break;
 					case 'login':
-						alert(obj.status + ' ' + obj.message);
+						if(obj.status === 'success')
+						{
+							$('#currentuser').text(obj.username);
+							Utils.createCookie('todo_user', obj.username, 1);
+							Utils.createCookie('todo_auth', obj.secret, 1);
+						}
+						else
+						{
+							alert(obj.message);
+						}				
+					break;
+					case 'logout':
+						if(obj.status === 'success')
+						{
+							Utils.eraseCookie('todo_user');
+							Utils.eraseCookie('todo_auth');
+							$('#currentuser').text('');
+						}
+						else
+						{
+							alert(obj.message);
+						}
 					break;
 					case 'update':
 					$.each(App.todos, function (i, val) {
@@ -156,6 +177,7 @@
 			this.$newpassword2 = this.$info.find('#newpassword2');
 			this.$loginuser = this.$info.find('#loginuser');
 			this.$loginpassword = this.$info.find('#loginpassword');
+			this.$currentuser = this.$info.find('#currentuser');
 			this.$newTodo = this.$header.find('#new-todo');
 			this.$toggleAll = this.$main.find('#toggle-all');
 			this.$todoList = this.$main.find('#todo-list');
@@ -172,6 +194,7 @@
 			this.$footer.on('click', '#filter-all', this.filterAll);
 			this.$info.on('click', '#register', this.register);
 			this.$info.on('click', '#login', this.login);
+			this.$info.on('click', '#logout', this.logout);
 			list.on('change', '.toggle', this.toggle);
 			list.on('dblclick', 'label', this.edit);
 			list.on('keypress', '.edit', this.blurOnEnter);
@@ -273,11 +296,6 @@
 	    	App.render();
         },
 	    register: function () {
-	    	//alert("pressed");
-	    	//alert(App.$info.find('#newuser').val());
-	    	//alert(App.$info.find('#password').val());
-	    	//alert(App.$info.find('#password2').val());
-
 			//create message to send
 			var register = new Object();
 			register.action = "register";
@@ -288,11 +306,6 @@
 			App.ws.send(JSON.stringify(register));
         },
 	    login: function () {
-	    	alert("pressed");
-	    	alert(App.$info.find('#loginuser').val());
-	    	alert(App.$info.find('#loginpassword').val());
-	    	//alert(App.$info.find('#password2').val());
-
 			//create message to send
 			var login = new Object();
 			login.action = "login";
@@ -300,6 +313,14 @@
 			login.password = App.$info.find('#loginpassword').val();
 			//send to server
 			App.ws.send(JSON.stringify(login));
+        },
+	    logout: function () {
+			//create message to send
+			var logout = new Object();
+			logout.action = "logout";
+			logout.auth = Utils.readCookie('todo_auth');
+			//send to server
+			App.ws.send(JSON.stringify(logout));
         },
         create: function (e) {
         	var $input = $(this);
