@@ -2,6 +2,43 @@ local server = require "resty.websocket.server"
 local cjson = require "cjson"
 local redis = require "resty.redis"
 local todo = require "todo"
+
+local function subscribe(wb)
+  local sub = redis:new()
+
+-- connect to redis
+local ok, err = sub:connect("127.0.0.1", 6379)
+if not ok then
+    ngx.log(ngx.ERR, "failed to connect redis: ", err)
+    return
+end
+ 
+sub:set_timeout(1000)
+ 
+-- subscribe to "messages"
+local res, err = sub:subscribe("messages")
+if not res then
+    ngx.log(ngx.ERR, "failed to subscribe redis: ", err)
+    return
+end
+
+  while true do
+    -- read the reaply from the message
+    res, err = sub:read_reply()
+    if not res then
+        --ngx.log(ngx.ERR, "no data from redis: ", err)
+    else
+        -- send the reaply to client
+        local bytes, err = wb:send_text(res[3])
+        if not bytes then
+            ngx.log(ngx.ERR, "failed to send text: ", err)
+            return ngx.exit(444)
+        end
+    end
+
+  end
+
+end
  
 -- start websockets
 local wb, err = server:new{
@@ -14,9 +51,10 @@ if not wb then
     return ngx.exit(444)
 end
  
+
+
 -- start redis clients
 local red = redis:new()
-local sub = redis:new()
  
 -- connect to redis
 local ok, err = red:connect("127.0.0.1", 6379)
@@ -25,24 +63,12 @@ if not ok then
     return
 end
  
--- connect to redis
-local ok, err = sub:connect("127.0.0.1", 6379)
-if not ok then
-    ngx.log(ngx.ERR, "failed to connect redis: ", err)
-    return
-end
- 
-sub:set_timeout(1)
- 
--- subscribe to "messages"
-local res, err = sub:subscribe("messages")
-if not res then
-    ngx.log(ngx.ERR, "failed to subscribe redis: ", err)
-    return
-end
+
  
 -- send all todo items to client
 todo.init(red, wb, cjson)
+
+ngx.thread.spawn(subscribe, wb)
  
 while true do
     local data, typ, err = wb:recv_frame()
@@ -97,31 +123,19 @@ while true do
  
         if action == "register" then
             -- register new user
-            todo.register(red, jsontodo)
+            todo.register(wb, red, jsontodo)
         end
  
         if action == "login" then
             -- login
-            todo.login(red, jsontodo)
+            todo.login(wb, red, jsontodo)
         end 
  
         if action == "logout" then
             -- logout
-            todo.logout(red, jsontodo)
+            todo.logout(wb, red, jsontodo)
         end 
  
-    end
-    -- read the reaply from the message
-    res, err = sub:read_reply()
-    if not res then
-        --ngx.log(ngx.ERR, "no data from redis: ", err)
-    else
-        -- send the reaply to client
-        local bytes, err = wb:send_text(res[3])
-        if not bytes then
-            ngx.log(ngx.ERR, "failed to send text: ", err)
-            return ngx.exit(444)
-        end
     end
 end
 wb:send_close()

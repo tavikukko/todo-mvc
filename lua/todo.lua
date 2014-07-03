@@ -1,3 +1,5 @@
+local cjson = require "cjson"
+
 local todo = {}
  
 function todo.init(red, wb, cjson)
@@ -35,7 +37,7 @@ function todo.init(red, wb, cjson)
     end
 end
  
-function todo.register(red, jsontodo)
+function todo.register(wb, red, jsontodo)
     
     local register = {}
     -- set values to array
@@ -53,8 +55,6 @@ function todo.register(red, jsontodo)
         if password ~= password2 then
             register["status"] = "fail"
             register["message"] = "passwords do not match"
-            -- encode array and publish to message quque
-            red:publish("messages", cjson.encode(register))
         else
             local userid = red:incr("global:nextuserId")
             red:set("username:" .. username .. ":id", userid)
@@ -66,24 +66,33 @@ function todo.register(red, jsontodo)
             red:set("auth:" .. authsecret, userid)
             red:sadd("global:users", userid)
  
-            local register = {}
             -- set values to array
             register["action"] = "register"
             register["status"] = "success"
             register["message"] = "registration success, now you can log in"
-            -- encode array and publish to message quque
-            red:publish("messages", cjson.encode(register))
         end
     else
         register["status"] = "fail"
         register["message"] = "userid taken, choose anotherone!"
-        -- encode array and publish to message quque
-        red:publish("messages", cjson.encode(register))
- 
     end
+
+    local bytes, err = wb:send_text(cjson.encode(register))
+    if not bytes then
+        ngx.log(ngx.ERR, "failed to send text: ", err)
+        return ngx.exit(444)
+    end
+
 end
  
-function todo.login(red, jsontodo)
+function sendmessage(message)
+    local bytes, err = wb:send_text(cjson.encode(message))
+    if not bytes then
+        ngx.log(ngx.ERR, "failed to send text: ", err)
+        return ngx.exit(444)
+    end
+end
+
+function todo.login(wb, red, jsontodo)
  
     local login = {}
     -- set values to array
@@ -111,35 +120,34 @@ function todo.login(red, jsontodo)
                     login["message"] = "authsecret: " .. authsecret
                     login["username"] = username
                     login["secret"] = authsecret
-                    -- send success message to client
-                    red:publish("messages", cjson.encode(login))
                 else
                     -- password did not match
                     login["status"] = "fail"
-                    login["message"] = "password incorrect"
-                    red:publish("messages", cjson.encode(login))   
+                    login["message"] = "password incorrect"  
                 end
             else
                 -- password  not found
                 login["status"] = "fail"
-                login["message"] = "no password found"
-                red:publish("messages", cjson.encode(login))   
+                login["message"] = "no password found" 
             end
         else
             -- userid not found
             login["status"] = "fail"
             login["message"] = "no userid found"
-            red:publish("messages", cjson.encode(login))
- 
         end
     else
         login["status"] = "fail"
         login["message"] = "missing username or password"
-        red:publish("messages", cjson.encode(login))
+    end
+    
+    local bytes, err = wb:send_text(cjson.encode(login))
+    if not bytes then
+        ngx.log(ngx.ERR, "failed to send text: ", err)
+        return ngx.exit(444)
     end
 end
  
-function todo.logout(red, jsontodo)
+function todo.logout(wb, red, jsontodo)
  
     local logout = {}
  
@@ -159,26 +167,28 @@ function todo.logout(red, jsontodo)
                 red:set("uid:" .. userid .. ":auth", newauthsecret)
                 red:set("auth:" .. newauthsecret, userid)
                 red:del("auth:" .. authsecret)
- 
-                red:publish("messages", cjson.encode(logout))
             else
                 logout["action"] = "logout" 
                 logout["status"] = "fail"
                 logout["message"] = "auth secret ei mätsää"
-                red:publish("messages", cjson.encode(logout))
             end
         else
             logout["action"] = "logout" 
             logout["status"] = "fail"
             logout["message"] = "authsecret oli nul"
-            red:publish("messages", cjson.encode(logout))
         end
     else
         logout["action"] = "logout" 
         logout["status"] = "fail"
         logout["message"] = "useridtä oli nul"
-        red:publish("messages", cjson.encode(logout))
-    end   
+    end
+
+    local bytes, err = wb:send_text(cjson.encode(logout))
+    if not bytes then
+        ngx.log(ngx.ERR, "failed to send text: ", err)
+        return ngx.exit(444)
+    end
+
 end
  
 function todo.toggleAll(red, jsontodo, data)
