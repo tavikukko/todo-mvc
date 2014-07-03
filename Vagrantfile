@@ -44,12 +44,12 @@ Vagrant.configure("2") do |config|
     echo "--- install gulpjs ---"
     npm install -g gulp
 
-    echo "--- clone project ---"
+    #echo "--- clone project ---"
     cd /vagrant
-    git clone https://github.com/tavikukko/todo-mvc.git
+    # git clone https://github.com/tavikukko/todo-mvc.git
 
     echo "--- copy files & folders to nginx root---"
-    cd todo-mvc
+    #cd todo-mvc
     cp -r app/ /usr/local/openresty/nginx/html/
     cp -r lua/ /usr/local/openresty/nginx/
     cp conf/nginx.conf /usr/local/openresty/nginx/conf/
