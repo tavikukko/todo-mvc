@@ -3,39 +3,35 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>jojojQuery • TodoMVC</title>
-		<link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+		<title>my tasks</title>
+		<link rel="stylesheet" href="dist/css/base.css">
 		<link rel="stylesheet" href="css/app.css">
         <link rel="stylesheet" href="http://ichord.github.io/At.js/dist/css/jquery.atwho.css" />
-		<link rel="stylesheet" type="text/css" href="http://ichord.github.io/At.js/assets/css/syntax.css"/>
-<!--link href='http://fonts.googleapis.com/css?family=Dosis:400,700|Bubblegum+Sans|Overlock:400,900|PT+Sans:400,700|PT+Sans+Narrow:400,700|Magra|Asap:400,700|Share:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css' -->
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-		<script src="bower_components/jquery/jquery.js"></script>
-		<script src="bower_components/handlebars/handlebars.js"></script>
-		<script src="bower_components/fastclick/fastclick.js"></script>	
+		<script src="dist/js/jquery-2.1.1.min.js"></script>
+		<script src="dist/js/handlebars-v1.3.0.js"></script>
+		<script src="dist/js/fastclick.js"></script>	
 		<script src="js/jquery.atwho.js"></script>
 		<script src="js/at.js"></script>
 	</head>
 	<body>
 		<section id="todoapp">
 			<header id="header">
-				<h1>todos</h1>
+				<h1>my tasks</h1>
 				<input id="new-todo" placeholder="7,5h +Asiakas #Projekti @Tehtävä" autofocus contentEditable="false">
 			</header>
 			<section id="main">
 				<input id="toggle-all" type="checkbox">
-				<label for="toggle-all">Mark all as complete</label>
+				<label for="toggle-all">Mark all</label>
 				<ul id="todo-list"></ul>
 			</section>
 			<footer id="footer">
 				<span id="todo-count"><strong>0</strong> item left</span>
-				<button id="clear-completed">Clear completed</button>
+				<button id="clear-completed">Clear marked</button>
 			</footer>
 		</section>
 		<footer id="info">
-			<p>Double-click to edit a todo</p>
-			<p>Created by <a href="http://github.com/sindresorhus">Sindre Sorhus</a></p>
-			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+			<p>Double-click to edit a task</p>
 			
 			<p>Register</p>
 			<input id="newuser" placeholder="username">
