@@ -6,7 +6,7 @@ console.timeEnd("Loading plugins"); //end measuring
 
 gulp.task('app', function() {
   var htmlSrc = './app/**/*.*',
-      htmlDst = '/usr/local/openresty/nginx/html';
+      htmlDst = '/usr/local/openresty/nginx/html/app';
  
   gulp.src(htmlSrc)
     .pipe(gulp.dest(htmlDst));
@@ -30,13 +30,7 @@ gulp.task('lua', function() {
 
 // default gulp task
 gulp.task('watchtask', ['conf', 'lua', 'app'], function() {
-	gulp.watch('./app/**/*.*', function() {
-    	gulp.run('app');
-  });
-	gulp.watch('./conf/**/*.*', function() {
-    	gulp.run('conf');
-  });
-	gulp.watch('./lua/**/*.*', function() {
-    	gulp.run('conf');
-  });
+	gulp.watch('./app/**/*.*',['app']);
+	gulp.watch('./conf/**/*.*',['conf']);
+	gulp.watch('./lua/**/*.*',['lua']);
 });
