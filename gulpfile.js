@@ -1,8 +1,4 @@
-
-console.time("Loading plugins"); //start measuring
-// include gulp
 var gulp = require('gulp'); 
-console.timeEnd("Loading plugins"); //end measuring
 
 gulp.task('app', function() {
   var htmlSrc = './app/**/*.*',
@@ -30,7 +26,7 @@ gulp.task('lua', function() {
 
 // default gulp task
 gulp.task('watchtask', ['conf', 'lua', 'app'], function() {
-	gulp.watch('./app/**/*.*',['app']);
-	gulp.watch('./conf/**/*.*',['conf']);
-	gulp.watch('./lua/**/*.*',['lua']);
+  gulp.watch('./app/**/*.*',['app']);
+  gulp.watch('./conf/**/*.*',['conf']);
+  gulp.watch('./lua/**/*.*',['lua']);
 });
