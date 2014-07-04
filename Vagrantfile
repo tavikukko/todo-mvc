@@ -4,7 +4,9 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
-  config.vm.network "forwarded_port", guest: 80, host: 8081
+  #config.vm.network "forwarded_port", guest: 80, host: 8081
+  config.vm.network "private_network", ip: "172.28.128.3"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", :mount_options => ['actimeo=2']
   #config.vm.network "forwarded_port", guest: 8000, host: 8000
   #config.vm.network "forwarded_port", guest: 8080, host: 8080
 
@@ -44,12 +46,8 @@ Vagrant.configure("2") do |config|
     echo "--- install gulpjs ---"
     npm install -g gulp
 
-    #echo "--- clone project ---"
-    cd /vagrant
-    # git clone https://github.com/tavikukko/todo-mvc.git
-
     echo "--- copy files & folders to nginx root---"
-    #cd todo-mvc
+    cd /vagrant
     cp -r app/ /usr/local/openresty/nginx/html/
     cp -r lua/ /usr/local/openresty/nginx/
     cp conf/nginx.conf /usr/local/openresty/nginx/conf/
@@ -61,7 +59,7 @@ Vagrant.configure("2") do |config|
     /usr/local/openresty/nginx/sbin/nginx
 
     echo "--- done ---"
-    echo "--- browse to http://localhost:8081 ---"
+    echo "--- browse to http://172.28.128.3 ---"
 
   SH
 

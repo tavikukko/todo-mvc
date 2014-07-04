@@ -60,7 +60,7 @@
 
 			FastClick.attach(document.body);
 			
-			this.ws = new WebSocket('ws://127.0.0.1:8081/s');
+			this.ws = new WebSocket('ws://'+ window.location.hostname +'/s');
 			
 			this.ws.onmessage = function (e) {
 
