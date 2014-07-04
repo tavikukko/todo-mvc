@@ -43,14 +43,17 @@ Vagrant.configure("2") do |config|
     apt-get update
     apt-get install -y nodejs
 
-    echo "--- install gulpjs ---"
+    echo "--- install gulpjs and start watch ---"
     npm install -g gulp
-
-    echo "--- copy files & folders to nginx root---"
     cd /vagrant
-    cp -r app/ /usr/local/openresty/nginx/html/
-    cp -r lua/ /usr/local/openresty/nginx/
-    cp conf/nginx.conf /usr/local/openresty/nginx/conf/
+    npm install gulp
+    gulp watchtask
+
+    #echo "--- copy files & folders to nginx root---"
+    #cd /vagrant
+    #cp -r app/ /usr/local/openresty/nginx/html/
+    #cp -r lua/ /usr/local/openresty/nginx/
+    #cp conf/nginx.conf /usr/local/openresty/nginx/conf/
 
     echo "--- start redis ---"
     redis-server &
