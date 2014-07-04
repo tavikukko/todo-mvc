@@ -44,6 +44,9 @@ Vagrant.configure("2") do |config|
     npm install gulp -g
     cd /vagrant
     su vagrant -c "npm install gulp"
+    gulp app
+    gulp conf
+    gulp lua
     # gulp watchtask
 
     #echo "--- copy files & folders to nginx root---"
