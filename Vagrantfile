@@ -7,6 +7,7 @@ Vagrant.configure("2") do |config|
   #config.vm.network "forwarded_port", guest: 80, host: 8081
   config.vm.network "private_network", ip: "172.28.128.3"
   config.vm.synced_folder ".", "/vagrant", type: "nfs", :mount_options => ['actimeo=2']
+  #,'dmode=777','fmode=777','uid=33','gid=33'
   #config.vm.network "forwarded_port", guest: 8000, host: 8000
   #config.vm.network "forwarded_port", guest: 8080, host: 8080
 
@@ -44,9 +45,9 @@ Vagrant.configure("2") do |config|
     apt-get install -y nodejs
 
     echo "--- install gulpjs and start watch ---"
-    npm install -g gulp
+    npm install gulp -g
     cd /vagrant
-    npm install gulp
+    su vagrant -c "npm install gulp"
     gulp watchtask
 
     #echo "--- copy files & folders to nginx root---"
