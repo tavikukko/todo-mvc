@@ -1,7 +1,7 @@
 Todo-mvc
 ==============
 Testing openresty (NGINX) with websockets and redis pubsub. 
-[https://github.com/tastejs/todomvc/tree/gh-pages/architecture-examples/jquery Todo-mvc-jquery] project as a base.
+<span class="plainlinks">[https://github.com/tastejs/todomvc/tree/gh-pages/architecture-examples/jquery Todo-mvc-jquery]</span> project as a base.
 View Vagrant file for more information of the stack.
 Usage
 --------------
