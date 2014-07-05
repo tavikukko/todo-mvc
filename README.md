@@ -1,8 +1,9 @@
-todo-mvc
+Todo-mvc
 ==============
-testing openresty with websockets. todo-mvc-jquery project as a base.
-
-usage
+Testing openresty (NGINX) with websockets and redis pubsub. 
+Todo-mvc-jquery project as a base (https://github.com/tastejs/todomvc/tree/gh-pages/architecture-examples/jquery).
+View Vagrant file for more information of the stack.
+Usage
 --------------
 host machine (osx): vagrant, virtualbox, git
 
