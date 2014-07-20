@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", type: "nfs", :mount_options => ['actimeo=2']
 
   config.vm.provision :shell, :inline => <<-SH
-    
+
     echo "--- aptget update ---"
     sudo bash
     apt-get update
@@ -17,9 +17,9 @@ Vagrant.configure("2") do |config|
     apt-get install -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make siege
 
     echo "--- install openresty ---"
-    wget http://openresty.org/download/ngx_openresty-1.7.2.1rc1.tar.gz 
-    tar xzvf ngx_openresty-1.7.2.1rc1.tar.gz
-    cd ngx_openresty-1.7.2.1rc1/
+    wget http://openresty.org/download/ngx_openresty-1.7.2.1.tar.gz
+    tar xzvf ngx_openresty-1.7.2.1.tar.gz
+    cd ngx_openresty-1.7.2.1/
     ./configure
     make
     make install
