@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
     apt-get update
     apt-get install -y nodejs
 
-    echo "--- install gulpjs and start watch ---"
+    echo "--- install gulpjs globally and locally to the project ---"
     npm install gulp -g
     cd /vagrant
     su vagrant -c "npm install gulp"
