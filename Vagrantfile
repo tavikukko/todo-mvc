@@ -24,6 +24,9 @@ Vagrant.configure("2") do |config|
     make
     make install
 
+    echo "--- copy template.lua and place it is resty folder ---"
+    wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua -P /usr/local/openresty/lualib/resty/
+
     echo "--- installing redis ---"
     add-apt-repository ppa:chris-lea/redis-server
     apt-get update
