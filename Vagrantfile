@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, :inline => <<-SH
 
-    echo "--- aptget update ---"
+    echo "--- apt-get update ---"
     sudo bash
     apt-get update
 
