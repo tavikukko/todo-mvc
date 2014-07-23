@@ -60,6 +60,9 @@ Vagrant.configure("2") do |config|
     echo "--- done ---"
     echo "--- browse to http://172.28.128.3 ---"
     echo "--- inside vagrant run 'sudo gulp watchtask' for auto copy task ---"
+    echo "--- vagrant tips"
+    echo "--- view all running vm's run 'VBoxManage list runningvms'..."
+    echo "--- destroy running vm's 'VBoxManage controlvm <machine-ID> poweroff'..."
 
   SH
 

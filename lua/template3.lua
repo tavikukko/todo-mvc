@@ -11,7 +11,7 @@ if not ok then
     return
 end
 
-ok, err = red:set("message", "Hello, World")
+ok, err = red:set("message", "Hello, Redis!")
 if not ok then
     ngx.say("failed to set message: ", err)
     return
