@@ -1,0 +1,9 @@
+{(header.html)}
+<h1>{{message}}</h1>
+<ul>
+{% a = {"one", "two", "three"}
+  for _, name in ipairs(a) do %}
+    <li>{{name}}</li>
+{% end %}
+</ul>
+{(footer.html)}
