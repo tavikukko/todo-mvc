@@ -5,5 +5,6 @@ if f~=nil then
   io.close(f)
   template.render(ngx.var.pathtoluapage .. ".html")
 else
+  io.close(f)
   ngx.say("page not found")
 end
